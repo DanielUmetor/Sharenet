@@ -1,5 +1,24 @@
 <template>
     <div class="spot-table-container">
+      <div class="filter-section">
+        <select v-model="selectedCategory" class="category-select">
+          <option value="">All Categories</option>
+          <option 
+            v-for="category in categories" 
+            :key="category"
+            :value="category"
+          >
+            {{ category }}
+          </option>
+        </select>
+        
+        <input 
+          v-model="searchTerm" 
+          placeholder="Search spots..." 
+          class="search-input"
+        />
+      </div>
+  
       <table class="spot-table">
         <thead>
           <tr>
@@ -7,24 +26,28 @@
               v-for="column in columns" 
               :key="column.key"
               @click="sortBy(column.key)"
+              :class="{ 'sorted': sortColumn === column.key }"
             >
               {{ column.label }}
-              <span v-if="sortColumn === column.key">
-                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+              <span class="sort-indicator">
+                {{ sortColumn === column.key 
+                   ? (sortDirection === 'asc' ? '▲' : '▼') 
+                   : '' }}
               </span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr 
-            v-for="spot in sortedSpots" 
+            v-for="spot in filteredAndSortedSpots" 
             :key="spot.code"
+            :class="{ 'positive-move': spot.move > 0, 'negative-move': spot.move < 0 }"
           >
             <td>{{ spot.fullName }}</td>
             <td>{{ spot.price.toFixed(2) }}</td>
             <td>{{ spot.move.toFixed(2) }}</td>
             <td>{{ spot.pmove.toFixed(2) }}%</td>
-            <td>{{ spot.datetime }}</td>
+            <td>{{ formatDateTime(spot.datetime) }}</td>
           </tr>
         </tbody>
       </table>
@@ -54,19 +77,38 @@
   
       const sortColumn = ref('');
       const sortDirection = ref<'asc' | 'desc'>('asc');
+      const searchTerm = ref('');
+      const selectedCategory = ref('');
+      
+      const categories = computed(() => {
+        return [...new Set(props.spots.map(spot => spot.categoryName))];
+      });
   
-      const sortedSpots = computed(() => {
-        if (!sortColumn.value) return props.spots;
-  
-        return [...props.spots].sort((a, b) => {
-          const modifier = sortDirection.value === 'asc' ? 1 : -1;
-          const keyA = a[sortColumn.value as keyof SpotPrice];
-          const keyB = b[sortColumn.value as keyof SpotPrice];
-  
-          if (keyA < keyB) return -1 * modifier;
-          if (keyA > keyB) return 1 * modifier;
-          return 0;
+      const filteredAndSortedSpots = computed(() => {
+        let result = props.spots.filter(spot => {
+          const matchesCategory = !selectedCategory.value || 
+            spot.categoryName === selectedCategory.value;
+          
+          const matchesSearch = spot.fullName.toLowerCase().includes(
+            searchTerm.value.toLowerCase()
+          );
+          
+          return matchesCategory && matchesSearch;
         });
+  
+        if (sortColumn.value) {
+          result.sort((a, b) => {
+            const modifier = sortDirection.value === 'asc' ? 1 : -1;
+            const keyA = a[sortColumn.value as keyof SpotPrice];
+            const keyB = b[sortColumn.value as keyof SpotPrice];
+  
+            if (keyA < keyB) return -1 * modifier;
+            if (keyA > keyB) return 1 * modifier;
+            return 0;
+          });
+        }
+  
+        return result;
       });
   
       const sortBy = (key: string) => {
@@ -78,21 +120,39 @@
         }
       };
   
+      const formatDateTime = (dateTime: string) => {
+        return new Date(dateTime).toLocaleString();
+      };
+  
       return {
         columns,
         sortColumn,
         sortDirection,
-        sortedSpots,
-        sortBy
+        searchTerm,
+        selectedCategory,
+        categories,
+        filteredAndSortedSpots,
+        sortBy,
+        formatDateTime
       };
     }
   });
   </script>
   
+ 
+  
   <style scoped>
   .spot-table-container {
     width: 100%;
     overflow-x: auto;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
   }
   
   .spot-table {
@@ -109,5 +169,21 @@
   .spot-table th {
     background-color: #f2f2f2;
     cursor: pointer;
+  }
+  
+  .sorted {
+    background-color: #e0e0e0;
+  }
+  
+  .positive-move {
+    background-color: rgba(0, 255, 0, 0.1);
+  }
+  
+  .negative-move {
+    background-color: rgba(255, 0, 0, 0.1);
+  }
+  
+  .sort-indicator {
+    float: right;
   }
   </style>
