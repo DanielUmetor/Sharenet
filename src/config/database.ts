@@ -1,20 +1,21 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
+import * as mysql from 'mysql2/promise';
+import * as dotenv from 'dotenv';
 
+// Load environment variables
 dotenv.config();
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'sharenet_workshops',
   port: parseInt(process.env.DB_PORT || '3306'),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
-export const initDatabase = async () => {
+export const initDatabase = async (): Promise<void> => {
   try {
     // Create Workshops Table
     await pool.execute(`
@@ -47,7 +48,7 @@ export const initDatabase = async () => {
   }
 };
 
-export const seedWorkshops = async () => {
+export const seedWorkshops = async (): Promise<void> => {
   try {
     const [existingWorkshops] = await pool.execute('SELECT * FROM workshops');
     

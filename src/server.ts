@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import workshopRoutes from './routes/workshopRoutes';
 import { initDatabase, seedWorkshops } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
@@ -10,7 +10,7 @@ import { errorHandler } from './middleware/errorHandler';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Middleware
@@ -30,7 +30,7 @@ app.use('/api/workshops', workshopRoutes);
 app.use(errorHandler);
 
 // Start server
-const startServer = async () => {
+const startServer = async (): Promise<void> => {
   try {
     await initDatabase();
     await seedWorkshops();

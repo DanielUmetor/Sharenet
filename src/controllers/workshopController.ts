@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
 import { Workshop, WorkshopBooking } from '../models/Workshop';
-import { validateEmail } from '../utils/validation';
 
 export const getAllWorkshops = async (
   req: Request, 
@@ -30,15 +29,8 @@ export const bookWorkshop = async (
 ): Promise<void> => {
   const { workshop_id, user_email }: WorkshopBooking = req.body;
 
-  // Validate input
   if (!workshop_id || !user_email) {
     res.status(400).json({ error: 'Workshop ID and user email are required' });
-    return;
-  }
-
-  // Validate email
-  if (!validateEmail(user_email)) {
-    res.status(400).json({ error: 'Invalid email format' });
     return;
   }
 

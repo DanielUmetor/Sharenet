@@ -12,6 +12,9 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "prepare": "npm run build"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "keywords": [
     "sharenet",
     "workshop",
@@ -44,7 +47,9 @@
     "node": ">=16.0.0"
   },
   "nodemonConfig": {
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "ts",
     "exec": "ts-node ./src/server.ts"
   }
