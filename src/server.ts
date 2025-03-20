@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
+import logger from './utils/logger';
 import workshopRoutes from './routes/workshopRoutes';
 import { initDatabase, seedWorkshops } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
@@ -36,11 +37,11 @@ const startServer = async (): Promise<void> => {
     await seedWorkshops();
     
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`Server running on port ${PORT}`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (error) {
-    console.error('Server startup error:', error);
+    logger.error('Server startup error:', error);
     process.exit(1);
   }
 };

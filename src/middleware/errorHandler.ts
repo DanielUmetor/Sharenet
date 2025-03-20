@@ -1,16 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 
+interface ErrorWithStatus extends Error {
+  status?: number;
+}
+
 export const errorHandler = (
-  err: Error, 
+  err: ErrorWithStatus, 
   req: Request, 
   res: Response, 
   next: NextFunction
 ) => {
   console.error('Unhandled Error:', err);
 
-  res.status(500).json({
+  const statusCode = err.status || 500;
+  const errorResponse = {
     error: 'Internal Server Error',
     message: err.message,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-  });
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  };
+
+  res.status(statusCode).json(errorResponse);
 };

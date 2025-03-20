@@ -2,13 +2,14 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
+    "lib": ["es2020", "dom"],  // Add this line
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
+    "types": ["node"],  // Ensure this is present
     "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src/**/*"],
