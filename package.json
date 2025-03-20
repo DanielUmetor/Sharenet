@@ -3,26 +3,18 @@
   "version": "1.0.0",
   "description": "Sharenet Workshop Booking Backend",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "nodemon --exec node --loader ts-node/esm src/server.ts",
-    "build": "npm pkg set scripts.prepare=\"\" && npm run clean && tsc",
+    "start": "node --experimental-specifier-resolution=node dist/server.js",
+    "dev": "nodemon --experimental-specifier-resolution=node --exec node --loader ts-node/esm src/server.ts",
+    "build": "tsc",
     "clean": "rm -rf dist",
-    "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
     "node": ">=20.0.0"
   },
-  "type": "module",
-  "keywords": [
-    "sharenet",
-    "workshop",
-    "booking",
-    "backend"
-  ],
+  "keywords": ["sharenet", "workshop", "booking"],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -30,27 +22,15 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mysql2": "^3.14.0",
-    "winston": "^3.17.0"
+    "mysql2": "^3.14.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
-    "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.1",
-    "@types/node": "^20.17.24",
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "@typescript-eslint/parser": "^7.7.1",
-    "eslint": "^8.57.0",
+    "@types/node": "^20.11.30",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "src"
-    ],
-    "ext": "ts",
-    "exec": "node --loader ts-node/esm ./src/server.ts"
   }
 }
