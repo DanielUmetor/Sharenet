@@ -2,10 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import logger from './utils/logger';
-import workshopRoutes from './routes/workshopRoutes';
-import { initDatabase, seedWorkshops } from './config/database';
-import { errorHandler } from './middleware/errorHandler';
+import workshopRoutes from './routes/workshopRoutes.js';
+import { initDatabase, seedWorkshops } from './config/database.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import logger from './utils/logger.js';
 
 // Load environment variables
 dotenv.config();

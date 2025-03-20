@@ -1,8 +1,8 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
-// Load environment variables
-dotenv.config();
+// Ensure .js extension
+dotenv.config({ path: new URL('../../.env', import.meta.url).pathname });
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',

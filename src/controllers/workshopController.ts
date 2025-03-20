@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import pool from '../config/database';
-import { Workshop, WorkshopBooking } from '../models/Workshop';
+import pool from '../config/database.js';
+import { Workshop, WorkshopBooking } from '../models/Workshop.js';
 
 export const getAllWorkshops = async (
   req: Request, 

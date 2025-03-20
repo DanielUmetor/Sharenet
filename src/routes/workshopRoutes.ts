@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { getAllWorkshops, bookWorkshop } from '../controllers/workshopController';
+import { getAllWorkshops, bookWorkshop } from '../controllers/workshopController.js';
 
 const router = express.Router();
 
